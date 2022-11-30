@@ -37,5 +37,26 @@ class ParkingGarageTest(unittest.TestCase):
         spots = self.parking_garage.get_occupied_spots()
         self.assertEqual(0, spots)
 
+    @patch.object(RTC, "get_current_time_string")
+    @patch.object(RTC, "get_current_day")
+    def test_parking_garage_get_parking_fee_example_1(self, mock_rtc_day, mock_rtc_time):
+        mock_rtc_time.return_value = "15:24:54" #exit_time
+        mock_rtc_day.return_value = "MONDAY"
+        entry_time = "12:30:15"
+
+        fee = self.parking_garage.calculate_parking_fee(entry_time)
+        self.assertEqual(7.5, fee)
+
+    @patch.object(RTC, "get_current_time_string")
+    @patch.object(RTC, "get_current_day")
+    def test_parking_garage_get_parking_fee_example_2(self, mock_rtc_day, mock_rtc_time):
+        mock_rtc_time.return_value = "18:12:28"  # exit_time
+        mock_rtc_day.return_value = "SATURDAY"
+        entry_time = "10:15:08"
+
+        fee = self.parking_garage.calculate_parking_fee(entry_time)
+        self.assertEqual(25.0, fee)
+
+
 
 
