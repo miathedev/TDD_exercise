@@ -37,6 +37,7 @@ class ParkingGarage:
 
         #Mias additions
         self.garage_open = False #Keeps track if garage door open
+        self.light_on = False #SmartLight on/off
 
     def check_occupancy(self, pin: int) -> bool:
         """
@@ -113,13 +114,20 @@ class ParkingGarage:
         """
         Turns on the smart lightbulb
         """
-        pass
+        if not self.light_on:
+            self.light_on = True
+            GPIO.output(self.LED_PIN, GPIO.HIGH)
 
     def turn_light_off(self) -> None:
         """
         Turns off the smart lightbulb
         """
-        pass
+        if self.light_on:
+            self.light_on = False
+            GPIO.output(self.LED_PIN, GPIO.LOW)
+
+    def is_light_on(self):
+        return self.light_on
 
     def change_servo_angle(self, duty_cycle):
         """
