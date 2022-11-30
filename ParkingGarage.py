@@ -15,6 +15,9 @@ class ParkingGarage:
     SERVO_PIN = 16
     LED_PIN = 18
 
+    GARAGE_DOOR_DEGREE_OPEN_DUTY_CYLE = (180 / 18) + 2
+    GARAGE_DOOR_DEGREE_CLOSED_DUTY_CYLE = (0 / 18) + 2
+
     def __init__(self):
         """
         Constructor
@@ -31,6 +34,9 @@ class ParkingGarage:
         self.rtc = RTC(self.RTC_PIN)
         self.pwm = GPIO.PWM(self.SERVO_PIN, 50)
         self.pwm.start(0)
+
+        #Mias additions
+        self.garage_open = False #Keeps track if garage door open
 
     def check_occupancy(self, pin: int) -> bool:
         """
@@ -87,15 +93,22 @@ class ParkingGarage:
         Opens the garage door using the servo motor
         A motor angle of 180 degrees corresponds to a fully open door
         """
-        pass
+        if not self.garage_open:
+            self.garage_open = True
+            self.change_servo_angle(self.GARAGE_DOOR_DEGREE_OPEN_DUTY_CYLE)
+
 
     def close_garage_door(self) -> None:
         """
         Closes the garage door using the servo motor
         A motor angle of 0 degrees corresponds to a fully closed door
         """
-        pass
+        if self.garage_open:
+            self.garage_open = False
+            self.change_servo_angle(self.GARAGE_DOOR_DEGREE_CLOSED_DUTY_CYLE)
 
+    def is_garage_door_open(self) -> bool:
+        return self.garage_open
     def turn_light_on(self) -> None:
         """
         Turns on the smart lightbulb
