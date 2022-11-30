@@ -27,6 +27,10 @@ class ParkingGarageTest(unittest.TestCase):
             self.assertFalse(occupancy)
 
     @patch("mock.GPIO.input")
+    def test_parking_garage_check_occupancy_invalid_pin(self, mock_input):
+        mock_input.return_value = 0  # Zero value: nothing is detected in front of the sensor
+        self.assertRaises(ParkingGarageError, self.parking_garage.check_occupancy, 1)
+    @patch("mock.GPIO.input")
     def test_parking_garage_get_occupied_slots_2(self, mock_input):
         mock_input.side_effect = [255, 255, 0]
         spots = self.parking_garage.get_occupied_spots()
