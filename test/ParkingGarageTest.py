@@ -57,6 +57,23 @@ class ParkingGarageTest(unittest.TestCase):
         fee = self.parking_garage.calculate_parking_fee(entry_time)
         self.assertEqual(25.0, fee)
 
+    def test_parking_garage_close_open_door(self):
+        #NOTE: I wanted to actually mock the call of pwm.ChangeDutyCycle to run another function,
+        #so that im able to check if the correct DUTY Cycle has been set. But i dont know how :/
 
+        #Default closed, closing again - should be still closed
+        self.assertFalse(self.parking_garage.is_garage_door_open())
+        self.parking_garage.close_garage_door()
+        self.assertFalse(self.parking_garage.is_garage_door_open())
 
+        #Open garage
+        self.parking_garage.open_garage_door()
+        self.assertTrue(self.parking_garage.is_garage_door_open())
 
+        #Open garage again, should still be open
+        self.parking_garage.open_garage_door()
+        self.assertTrue(self.parking_garage.is_garage_door_open())
+
+        #Close garage
+        self.parking_garage.close_garage_door()
+        self.assertFalse(self.parking_garage.is_garage_door_open())
