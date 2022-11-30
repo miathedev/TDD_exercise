@@ -1,4 +1,6 @@
 import time
+from datetime import datetime
+
 import mock.GPIO as GPIO
 from mock.RTC import RTC
 from ParkingGarageError import ParkingGarageError
@@ -64,7 +66,21 @@ class ParkingGarage:
         vehicle in the garage
         :return: The total amount to be paid by the customer
         """
-        pass
+        entry_time = time.strptime(entry_time, '%H:%M:%S')
+        exit_time = time.strptime(RTC.get_current_time_string(), '%H:%M:%S')
+        weekday = RTC.get_current_day()
+
+        time_parked_hours = exit_time.tm_hour - entry_time.tm_hour
+        time_parked_minutes = exit_time.tm_min - entry_time.tm_min
+
+        if time_parked_minutes > 0:
+            time_parked_hours += 1
+
+        cost = time_parked_hours * 2.5
+        if weekday not in ["SATURDAY", "SUNDAY"]:
+            return cost
+        else:
+            return cost + cost * 0.25
 
     def open_garage_door(self) -> None:
         """
